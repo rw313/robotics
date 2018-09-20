@@ -58,7 +58,7 @@ class OutAndBack():
                         print(distance)
 			self.translate(distance)
                 elif move == 'R' or move == 'r':
-                        angle = float(input('Angle? '))
+                        angle = float(input('Angle in degrees? '))
                         self.rotate(angle)
                 elif move == 'Q' or move == 'q':
                         break
@@ -66,7 +66,8 @@ class OutAndBack():
                         print('Move not recognized. Try T, R, or Q.')
 	
 
-    def rotate(self, goal_angle):
+    def rotate(self, angle_in_degrees):
+	goal_angle = angle_in_degrees * float(pi/180) # convert to radians
 	angular_duration = goal_angle / self.angular_speed
 	angular_duration = math.fabs(angular_duration)
 
