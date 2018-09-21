@@ -48,5 +48,15 @@ The program will prompt you for input. The letter T (lowercase or uppercase) wil
 #### Methods
 Method: a brief descripon of your methods
 
+main: Kills running rviz and ros programs, launches a turtlebot and runs rviz before instantiating the OutAndBack class
+
+OutAndBack: __init__: initiates a node called out_and_back and sets up some other class variables that will be used for moving the turtlebot. Runs a while loop that takes in user input to control the turtlebot.
+
+OutAndBack: rotate: converts user input into a Twist move command for rotating a certain angle and publishes it to the turtlebot.
+
+OutAndBack: translate: converts user input into a Twist move command for translating a certain distance and publishes it to the turtlebot. 
+
+OutAndBack: shutdown: stops the robot, called when rospy shuts down. 
+
 #### Video
 https://youtu.be/Mq9UKbztnJw
