@@ -51,6 +51,7 @@ class OutAndBack():
 	# Set the rotation speed to 1.0 radians per second
 	self.angular_speed = 1.0
 
+	# Collect user input to control the bot
 	while not rospy.is_shutdown():
                 move = raw_input('Enter T for translation, R for rotation, or Q for quit: ')
 		if move == 'T' or move == 't':
@@ -67,37 +68,58 @@ class OutAndBack():
 	
 
     def rotate(self, angle_in_degrees):
-	goal_angle = angle_in_degrees * float(pi/180) # convert to radians
+	# convert goal angle to radians 
+	goal_angle = angle_in_degrees * float(pi/180)
+
+	# Get the duration that the bot has to rotate
 	angular_duration = goal_angle / self.angular_speed
+
+	# Make sure duration is positive, even if the angle is not
 	angular_duration = math.fabs(angular_duration)
 
+	# Start a new move command to publish to the bot
 	move_cmd = Twist()
+
+	# Adjust for negative angle
 	if goal_angle < 0:
 		move_cmd.angular.z = self.angular_speed * -1.0
 	else:
 		move_cmd.angular.z = self.angular_speed 
+
+	# Calculate the number of intervals for publishing the move
 	ticks = int(angular_duration * self.rate)
 	
+	# ROtate the bot according to ticks and move_cmd
 	for t in range(ticks):
 		self.cmd_vel.publish(move_cmd)
 		self.r.sleep()
+	
+	# Publish to the topic 
 	self.cmd_vel.publish(Twist())
 	
     def translate(self, goal_distance):
+	# Get the duration and make sure it's positive
         linear_duration = goal_distance / self.linear_speed
         linear_duration = math.fabs(linear_duration)
 
+	# Start a new move command
         move_cmd = Twist()
+
+	# Adjust for negative goal distance
 	if goal_distance < 0:
 		move_cmd.linear.x = self.linear_speed * -1.0
 	else:
 		move_cmd.linear.x = self.linear_speed
         
+	# Calculate number of intervals to publish move
 	ticks = int(linear_duration * self.rate)
 
+	# Move the bot based on ticks and move_cmd
         for t in range(ticks):
             self.cmd_vel.publish(move_cmd)
             self.r.sleep()
+	
+	# Publish to the bot
         self.cmd_vel.publish(Twist())
             
     def shutdown(self):
@@ -108,6 +130,7 @@ class OutAndBack():
 
  
 if __name__ == '__main__':
+    # Create a clean environment
     clear = os.system("killall -9 rviz")
     clear = os.system("killall -9 roscore")
     clear2 = os.system("killall -9 rosmaster")
